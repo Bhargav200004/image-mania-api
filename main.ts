@@ -1,12 +1,15 @@
-import { Hono } from '@hono/hono'
+import { Hono } from "@hono/hono";
+import { db } from "./db.ts";
+import { images } from "./schema.ts";
 
 const app = new Hono();
 
-app.get('/' , (c) => {
-  return c.json({
-    first : "Hello ",
-    last : "World"
-  });
-})
+app.get("/", async (c) => {
+  const allImages = await db.select().from(images);
 
-Deno.serve(app.fetch)
+  return c.json({
+    data: allImages,
+  });
+});
+
+Deno.serve(app.fetch);
